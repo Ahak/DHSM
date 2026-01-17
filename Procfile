@@ -1,0 +1,1 @@
+gunicorn Dalalihouse.wsgi:application
