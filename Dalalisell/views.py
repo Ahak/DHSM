@@ -9,14 +9,19 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from .models import *
 
 User = get_user_model()
 # Create your views here.
 class LoginView(View):
+    @method_decorator(never_cache)
     def get(self,request):
         return render(request, 'index.html')
-    
+
+    @method_decorator(never_cache)
     def post(self, request):
         username = request.POST['username']
         password =request.POST['password']
@@ -36,6 +41,7 @@ class LoginView(View):
             return render(request, 'index.html')
         
 class SignupView(View):
+    @method_decorator(never_cache)
     def get(self, request):
         return render(request, 'signup.html')
     
@@ -66,7 +72,13 @@ class SignupView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect('login')
+        request.session.flush()
+        response = redirect('login')
+        # Prevent browser caching of authenticated pages
+        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response['Pragma'] = 'no-cache'
+        response['Expires'] = '0'
+        return response
     
 
 class BuyerDashboardView(LoginRequiredMixin, View):

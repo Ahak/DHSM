@@ -16,14 +16,38 @@
   </head>
   <style></style>
   <body>
-    {% block content %} 
-    
-    
-    
-    
-    
-    
+    {% block content %}
+
+
+
+
+
+
     {% endblock %}
+
+    <script>
+      // Prevent browser back button for authenticated users
+      {% if user.is_authenticated %}
+      // Disable browser caching
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function() {
+          window.history.pushState(null, null, window.location.href);
+          // Redirect to login if trying to go back
+          window.location.href = '{% url "login" %}';
+        };
+      }
+
+      // Additional cache prevention
+      window.onload = function() {
+        if (window.history.replaceState) {
+          window.history.replaceState(null, null, window.location.href);
+        }
+      };
+      {% endif %}
+    </script>
+
+  </body>
   </body>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
