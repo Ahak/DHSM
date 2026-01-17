@@ -1,27 +1,150 @@
-{% extends "base.html" %} {% block content%} {% include "navbar.html" %}
-{% load static %}
-{% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-    {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+{% extends "base.html" %} {% block content%} {% include "navbar.html" %} {% load static %} {% if messages %} {% for message in messages %}
+<div
+  class="alert alert-{{ message.tags }} alert-dismissible fade show"
+  role="alert"
+>
+  {{ message }}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endfor %} {% endif %}
+
+<div class="container mt-4">
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+      <form method="GET" action="{% url 'buyer-dashboard' %}">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            name="query"
+            placeholder="Search properties by title or description..."
+            value="{{ query }}"
+          />
+          <button class="btn btn-primary" type="submit">
+            <i class="fas fa-search"></i> Search
+          </button>
+          {% if query or min_price or max_price or min_rooms or location %}
+          <a
+            href="{% url 'buyer-dashboard' %}"
+            class="btn btn-outline-secondary"
+          >
+            <i class="fas fa-times"></i> Clear All
+          </a>
+          {% endif %}
+        </div>
+
+        <!-- Advanced Search Toggle -->
+        <div class="text-center mb-3">
+          <button
+            class="btn btn-link"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#advancedSearch"
+          >
+            Advanced Search <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+
+        <!-- Advanced Search Fields -->
+        <div class="collapse" id="advancedSearch">
+          <div class="card card-body bg-light">
+            <div class="row g-3">
+              <div class="col-md-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="location"
+                  placeholder="Location"
+                  value="{{ location }}"
+                />
+              </div>
+              <div class="col-md-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="min_price"
+                  placeholder="Min Price (TZS)"
+                  value="{{ min_price }}"
+                />
+              </div>
+              <div class="col-md-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="max_price"
+                  placeholder="Max Price (TZS)"
+                  value="{{ max_price }}"
+                />
+              </div>
+              <div class="col-md-3">
+                <input
+                  type="number"
+                  class="form-control"
+                  name="min_rooms"
+                  placeholder="Min Rooms"
+                  value="{{ min_rooms }}"
+                />
+              </div>
+            </div>
+            <div class="text-center mt-3">
+              <button class="btn btn-success" type="submit">
+                <i class="fas fa-search"></i> Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-  {% endfor %}
-{% endif %}
+</div>
 
 <div class="container mt-5">
+  {% if query or location or min_price or max_price or min_rooms %}
+  <div class="mb-3">
+    <h4>Search Results</h4>
+    <div class="row">
+      {% if query %}<span class="badge bg-primary me-2"
+        >Keyword: {{ query }}</span
+      >{% endif %} {% if location %}<span class="badge bg-info me-2"
+        >Location: {{ location }}</span
+      >{% endif %} {% if min_price %}<span class="badge bg-success me-2"
+        >Min Price: {{ min_price }} TZS</span
+      >{% endif %} {% if max_price %}<span class="badge bg-warning me-2"
+        >Max Price: {{ max_price }} TZS</span
+      >{% endif %} {% if min_rooms %}<span class="badge bg-secondary me-2"
+        >Min Rooms: {{ min_rooms }}</span
+      >{% endif %}
+    </div>
+  </div>
+  {% endif %}
   <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
     {% for property in properties%}
-    <div class="col d-flex justify-content-center" style="margin-left:2rem">
+    <div class="col d-flex justify-content-center" style="margin-left: 2rem">
       <div class="p-3">
         <div class="card" style="width: 15rem ; height:22rem, margin-left:2rem">
-          <img src="{{property.image1.url}}" class="card-img-top" alt="..."  style="height: 12rem; object-fit: cover;"/>
+          <img
+            src="{{property.image1.url}}"
+            class="card-img-top"
+            alt="..."
+            style="height: 12rem; object-fit: cover"
+          />
           <div class="card-body">
             <h5 class="card-title">{{property.title}}</h5>
             <div class="row">
-              <p class="card-text col"><i class="fa-solid fa-location-dot"></i> {{property.location}}</p>
-              <p class="card-text col"><i class="fas fa-bed"></i> {{property.room}}</p>
-              <p class="card-text col"><i class="fas fa-bath"></i> {{property.bathroom}}</p>
+              <p class="card-text col">
+                <i class="fa-solid fa-location-dot"></i> {{property.location}}
+              </p>
+              <p class="card-text col">
+                <i class="fas fa-bed"></i> {{property.room}}
+              </p>
+              <p class="card-text col">
+                <i class="fas fa-bath"></i> {{property.bathroom}}
+              </p>
             </div>
             <p>{{property.price}} Tzs</p>
             <a href="{%url 'property' property.id %}" class="btn btn-primary"
@@ -31,7 +154,19 @@
         </div>
       </div>
     </div>
-    {% endfor%} 
+    {% empty %}
+    <div class="col-12 text-center mt-5">
+      <div class="alert alert-info">
+        <h5><i class="fas fa-search"></i> No properties found</h5>
+        <p>
+          Try adjusting your search criteria or browse all available properties.
+        </p>
+        <a href="{% url 'buyer-dashboard' %}" class="btn btn-primary">
+          <i class="fas fa-home"></i> View All Properties
+        </a>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 </div>
- {% endblock %}
+{% endblock %}

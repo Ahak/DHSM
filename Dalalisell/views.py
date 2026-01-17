@@ -71,8 +71,50 @@ class LogoutView(View):
 
 class BuyerDashboardView(LoginRequiredMixin, View):
     def get(self, request):
-        properties = Property.objects.filter(status = "Approved")
-        return render(request, 'dashboard.html', {'properties': properties })
+        query = request.GET.get('query', '')
+        min_price = request.GET.get('min_price', '')
+        max_price = request.GET.get('max_price', '')
+        min_rooms = request.GET.get('min_rooms', '')
+        location = request.GET.get('location', '')
+
+        properties = Property.objects.filter(status="Approved")
+
+        if query:
+            properties = properties.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query)
+            )
+
+        if location:
+            properties = properties.filter(location__icontains=location)
+
+        if min_price:
+            try:
+                properties = properties.filter(price__gte=float(min_price))
+            except ValueError:
+                pass
+
+        if max_price:
+            try:
+                properties = properties.filter(price__lte=float(max_price))
+            except ValueError:
+                pass
+
+        if min_rooms:
+            try:
+                properties = properties.filter(room__gte=int(min_rooms))
+            except ValueError:
+                pass
+
+        context = {
+            'properties': properties,
+            'query': query,
+            'min_price': min_price,
+            'max_price': max_price,
+            'min_rooms': min_rooms,
+            'location': location
+        }
+        return render(request, 'dashboard.html', context)
     
 class PropertyView(LoginRequiredMixin, View):
     def get(self, request, pk=None, **kwargs):
@@ -203,3 +245,50 @@ class SellerPaymentsView(LoginRequiredMixin, View):
     def get(self, request):
         payments = Payment.objects.filter(property__seller=request.user)
         return render(request, 'view-payment.html', {'payments': payments })
+    
+class SearchView(LoginRequiredMixin, View):
+    def get(self, request):
+        query = request.GET.get('query', '')
+        min_price = request.GET.get('min_price', '')
+        max_price = request.GET.get('max_price', '')
+        min_rooms = request.GET.get('min_rooms', '')
+        location = request.GET.get('location', '')
+
+        properties = Property.objects.filter(status='Approved')
+
+        if query:
+            properties = properties.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query)
+            )
+
+        if location:
+            properties = properties.filter(location__icontains=location)
+
+        if min_price:
+            try:
+                properties = properties.filter(price__gte=float(min_price))
+            except ValueError:
+                pass
+
+        if max_price:
+            try:
+                properties = properties.filter(price__lte=float(max_price))
+            except ValueError:
+                pass
+
+        if min_rooms:
+            try:
+                properties = properties.filter(room__gte=int(min_rooms))
+            except ValueError:
+                pass
+
+        context = {
+            'properties': properties,
+            'query': query,
+            'min_price': min_price,
+            'max_price': max_price,
+            'min_rooms': min_rooms,
+            'location': location
+        }
+        return render(request, 'dashboard.html', context)

@@ -17,4 +17,5 @@ urlpatterns = [
     path('delete-property/<int:pk>', views.DeletePropertyView.as_view(), name='delete-property'),
     path('my-payments/', views.ViewPaymentsView.as_view(), name='my-payments'),
     path('seller-payments/', views.SellerPaymentsView.as_view(), name='seller-payments'),
+    path('search/', views.SearchView.as_view(), name='search'),
 ] 
