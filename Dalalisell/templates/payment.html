@@ -1,0 +1,44 @@
+{% extends "base.html"%} {% block content%} {%include "navbar.html"%}
+
+<div class="container mt-5">
+  <h2>Make a Payment</h2>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ property.title }}</h5>
+      <p class="card-text">{{ property.description }}</p>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <strong>Price:</strong> {{ property.price }} TZS
+        </li>
+        <li class="list-group-item">
+          <strong>Location:</strong> {{ property.location }}
+        </li>
+        <li class="list-group-item">
+          <strong>Bedrooms:</strong> {{ property.room }}
+        </li>
+        <li class="list-group-item">
+          <strong>Bathrooms:</strong> {{ property.bathroom }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <form method="post" class="mt-4">
+    {% csrf_token %}
+    <input type="hidden" name="property_id" value="{{ property.id }}" />
+    <div class="mb-3">
+      <label for="amount" class="form-label">Amount</label>
+      <input
+        type="number"
+        class="form-control"
+        id="amount"
+        name="amount"
+        value="{{ property.price }}"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-success">Pay Now</button>
+  </form>
+</div>
+
+{%endblock%}

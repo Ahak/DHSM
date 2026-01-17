@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block content%} {% include "navbar.html" %}
+{% load static %}
+{% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+{% endif %}
+
+<div class="container mt-5">
+  <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+    {% for property in properties%}
+    <div class="col d-flex justify-content-center" style="margin-left:2rem">
+      <div class="p-3">
+        <div class="card" style="width: 15rem ; height:22rem, margin-left:2rem">
+          <img src="{{property.image1.url}}" class="card-img-top" alt="..."  style="height: 12rem; object-fit: cover;"/>
+          <div class="card-body">
+            <h5 class="card-title">{{property.title}}</h5>
+            <div class="row">
+              <p class="card-text col"><i class="fa-solid fa-location-dot"></i> {{property.location}}</p>
+              <p class="card-text col"><i class="fas fa-bed"></i> {{property.room}}</p>
+              <p class="card-text col"><i class="fas fa-bath"></i> {{property.bathroom}}</p>
+            </div>
+            <p>{{property.price}} Tzs</p>
+            <a href="{%url 'property' property.id %}" class="btn btn-primary"
+              >View house</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor%} 
+  </div>
+</div>
+ {% endblock %}
