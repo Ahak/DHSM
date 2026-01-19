@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:$PORT DalaliHouse.wsgi
+web: gunicorn Dalalihouse.wsgi
