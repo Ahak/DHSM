@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Dalalisell',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'Dalalisell.middleware.NoCacheMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 AUTH_USER_MODEL = 'Dalalisell.CustomUser'
 
