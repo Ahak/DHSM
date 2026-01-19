@@ -1,7 +1,4 @@
 from django.shortcuts import render
-
-# Create your views here.
-import pkgutil
 from django.shortcuts import render,redirect
 from django.views import View
 from django.contrib import messages
