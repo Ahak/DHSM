@@ -40,7 +40,7 @@ class LoginView(View):
 class SignupView(View):
     @method_decorator(never_cache)
     def get(self, request):
-        return render(request, 'signup.html')
+        return render(request, 'Signup.html')
     
     def post(self, request):
         first_name = request.POST['first_name']
@@ -55,11 +55,11 @@ class SignupView(View):
 
         if password != confirm_password:
             messages.error(request, 'Passwords do not match')
-            return render(request, 'signup.html')
+            return render(request, 'Signup.html')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists')
-            return render(request, 'signup.html')
+            return render(request, 'Signup.html')
 
         user = User.objects.create_user(username=username, email=email, phone=phone, role=role, password=password, image=image, first_name=first_name, last_name=last_name)
         user.save()
