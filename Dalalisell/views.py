@@ -74,7 +74,7 @@ class LogoutView(View):
         logout(request)
         request.session.flush()
         response = redirect('login')
-        # Prevent browser caching of authenticated pages
+       
         response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
         response['Pragma'] = 'no-cache'
         response['Expires'] = '0'
