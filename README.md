@@ -28,9 +28,9 @@ https://dalalihousesystem.onrender.com/
 
 1. Open the project folder using Command Prompt (CMD) or Terminal
 2. Create a virtual environment:
-   python -m venv venv
+   python -m venv .env
 3. Activate the virtual environment:
-     venv\Scripts\activate
+   .env\Scripts\activate
 4. Run the development server:
    python manage.py runserver
 5. Open your browser and visit:
